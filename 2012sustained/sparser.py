@@ -10,10 +10,19 @@ content = re.split("\n(?=Log)", content)
 
 allcontent = []
 
-allcontent = [el.replace("\n", " ") for el in content]
+allcontent = [log.replace("\n", " ") for log in content]
 
 
 o = open("out.txt", "w")
 print >>o, allcontent
+
+# find all Log/C.R. numbers, store to logno
+for log in allcontent:
+	logno = re.findall(r"No. (\d+)", log)
+	# print logno
+
+for log in allcontent: 
+	datefiled = re.findall(r"\d+\sOn\s([A-z]+\s\d+,\s\d+)", log)
+	print datefiled
 
 
