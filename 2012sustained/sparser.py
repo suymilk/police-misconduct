@@ -1,6 +1,7 @@
 import re
 from datetime import datetime
 from time import strftime
+import itertools
 
 filename = ("sustained012012.txt")
 f = open(filename)
@@ -39,24 +40,25 @@ for log in allcontent:
 # find the district in which the incident occurred
 district = []
 for log in allcontent:
-	# if re.match(r"(\d+)\D+ District", log) == False:
-	# 	district[log] = "none"
-	# else:
-	district = re.findall(r"(\d+)\D+ District", log)
-	# print district
+	if re.match(r"(\d+)\D+ District", log) == False:
+		district = "none"
+	else:
+		district.append(re.findall(r"(\d+)\D+ District", log))
+# print district
 
 # find reference names of officers involved
+officers = []
 for log in allcontent:
 	if "involving" in log:
 		if "Officers" in log:
-			officers = re.findall(r"for\s(Officer\s[A-Z])", log)
-			print officers
+			officers.append(re.findall(r"for\s(Officer\s[A-Z])", log))
 		else: 
-			officers = re.findall(r"(?:\(([A-Z][a-z]+\s[A-Z]))\)", log)
-			print officers		
+			officers.append(re.findall(r"(?:\(([A-Z][a-z]+\s[A-Z]))\)", log))
 	else:
-		officers = re.findall(r"CPD\)\s(\w+)", log)
-		print officers  
+		officers.append(re.findall(r"CPD\)\s(\w+)", log))
+print officers  
+
+
 
 
 
