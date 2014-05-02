@@ -4,17 +4,20 @@ from time import strftime
 import itertools
 
 filename = ("sustained012012.txt")
-f = open(filename)
-content = str(f.read())
 
-# get digits (date of publication of investigations) from filename
-# pblstr = filter(str.isdigit, filename)
-# pbl = datetime(year=int(pblstr[2:5]), month=int(pblstr[0:1]))
-# print pbl
+remove_words = ["Created by INDEPENDENT POLICE REVIEW AUTHORITY", "Abstracts of Sustained Cases", "JANUARY 2012", "Page"]
+
+with open(filename) as oldfile, open ('newfile.txt', 'w') as newfile:
+	for line in oldfile:
+		if not any(remove_word in line for remove_word in remove_words):
+			newfile.write(line)
+
+f = open("newfile.txt")
+
+content = str(f.read())
 
 # split file by each incident (starts with "Log")
 content = re.split("\n(?=Log)", content)
-# print content
 
 allcontent = []
 
@@ -56,9 +59,23 @@ for log in allcontent:
 			officers.append(re.findall(r"(?:\(([A-Z][a-z]+\s[A-Z]))\)", log))
 	else:
 		officers.append(re.findall(r"CPD\)\s(\w+)", log))
-print officers  
+# print officers  
 
+# split allcontent into sentences to allow iterating by sentences
 
+bysentence = []
+
+for log in allcontent:
+	bysentence.append(re.split("[.!?][\s]{1,2}(?=[A-Z])", log))
+	# print bysentence
+
+for sentence in bysentence:
+	# print sentence
+	recs = []
+	for thing in sentence:
+		if "IPRA recommended" in thing:
+			recs.append(thing)
+	print recs
 
 
 
@@ -68,11 +85,8 @@ print officers
 # 	rec = re.findall(f")
 # 	look for content between "" \\(xe2)\\(x80)\\(x9c).+?\\(xe2)\\(x80)\\(x9d)
 
-# pattern for looking for officers involved: if only one, no parentheses to indicate officer A or officer B, etc. if more than one, reference names are set off by parentheses. in parentheses, the type of officer is referenced (i.e. sergeant, officer, lieutenant); do we want that? potential categories: type of officers involved, number of officers involved, reference names of officers involved
 
 # pattern for the evidence used in coming to a conclusion? "Based on x, x, x"
 
-# pattern for allegations "It was alleged that " skip over noun, go to verb? NLTK?
 
 # find how long it took IPRA to come to a conclusion on a complaint (convert complaint file date to string (strptime), subtract from converted date of file name to datetime object)
-
