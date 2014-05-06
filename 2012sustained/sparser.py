@@ -1,20 +1,19 @@
 import re
-from datetime import datetime
-from time import strftime
+import csv
 import itertools
 
 filename = ("sustained012012.txt")
 
-remove_words = ["Created by INDEPENDENT POLICE REVIEW AUTHORITY", "Abstracts of Sustained Cases", "JANUARY 2012", "Page"]
+# remove_words = ["Created by INDEPENDENT POLICE REVIEW AUTHORITY", "Abstracts of Sustained Cases", "JANUARY 2012", "Page"]
 
-with open(filename) as oldfile, open ('newfile.txt', 'w') as newfile:
-	for line in oldfile:
-		if not any(remove_word in line for remove_word in remove_words):
-			newfile.write(line)
+# with open(filename) as oldfile, open ('newfile.txt', 'w') as newfile:
+# 	for line in oldfile:
+# 		if not any(remove_word in line for remove_word in remove_words):
+# 			newfile.write(line)
 
-f = open("newfile.txt")
+# f = open("newfile.txt")
 
-content = str(f.read())
+content = str(filename.read())
 
 # split file by each incident (starts with "Log")
 content = re.split("\n(?=Log)", content)
