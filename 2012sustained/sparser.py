@@ -27,9 +27,6 @@ allcontent = [log.replace("\n", " ") for log in content]
 # all files start with unncessary title that gets grouped into own element; delete element
 del allcontent[0]
 
-o = open("out.txt", "w")
-print >>o, allcontent
-
 # find all Log/C.R. numbers, store to logno
 for log in allcontent:
 	logno = re.findall(r"No. (\d+)", log)
@@ -47,7 +44,7 @@ for log in allcontent:
 		district = "none"
 	else:
 		district.append(re.findall(r"(\d+)\D+ District", log))
-# print district
+print district
 
 # find reference names of officers involved
 officers = []
@@ -62,7 +59,6 @@ for log in allcontent:
 # print officers  
 
 # split allcontent into sentences to allow iterating by sentences
-
 bysentence = []
 
 for log in allcontent:
@@ -75,18 +71,4 @@ for sentence in bysentence:
 	for thing in sentence:
 		if "IPRA recommended" in thing:
 			recs.append(thing)
-	print recs
-
-
-
-
-# what are the recommendations?
-# for log in allcontent:
-# 	rec = re.findall(f")
-# 	look for content between "" \\(xe2)\\(x80)\\(x9c).+?\\(xe2)\\(x80)\\(x9d)
-
-
-# pattern for the evidence used in coming to a conclusion? "Based on x, x, x"
-
-
-# find how long it took IPRA to come to a conclusion on a complaint (convert complaint file date to string (strptime), subtract from converted date of file name to datetime object)
+	# print recs
