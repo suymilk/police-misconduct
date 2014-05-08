@@ -1,10 +1,11 @@
-import re
-import csv
-import itertools
+import re, glob, os, sys, itertools
+from collections import Counter
 
-filename = ("sustained012012.txt")
+for file in glob.glob("*.txt"):
+	with open(file) as content:
+		content = content.read()
 
-# remove_words = ["Created by INDEPENDENT POLICE REVIEW AUTHORITY", "Abstracts of Sustained Cases", "JANUARY 2012", "Page"]
+# remove_words = ["Created by INDEPENDENT POLICE REVIEW AUTHORITY", "Abstracts of Sustained Cases", "2012", "Page"]
 
 # with open(filename) as oldfile, open ('newfile.txt', 'w') as newfile:
 # 	for line in oldfile:
@@ -13,65 +14,38 @@ filename = ("sustained012012.txt")
 
 # f = open("newfile.txt")
 
-content = str(filename.read())
-
 # split file by each incident (starts with "Log")
-content = re.split("\n(?=Log)", content)
+	content = re.split("\n(?=Log)", content)
 
-allcontent = []
+	allcontent = []
 
-# join line breaks caused by pdftotext
-allcontent = [log.replace("\n", " ") for log in content]
+	# join line breaks caused by pdftotext
+	allcontent = [log.replace("\n", " ") for log in content]
 
-# all files start with unncessary title that gets grouped into own element; delete element
-del allcontent[0]
+	# all files start with unncessary title that gets grouped into own element; delete element
+	del allcontent[0]
 
-# what's this thing look like?
-# o = open("out.txt", "w")
-# print >>o, allcontent
+	# what's this thing look like?
+	# o = open("out.txt", "w")
+	# print >>o, allcontent
 
-# find all Log/C.R. numbers, store to logno
-for log in allcontent:
-	logno = re.findall(r"No. (\d+)", log)
-	# print logno
+	# find all Log/C.R. numbers, store to logno
+	for log in allcontent:
+		logno = re.findall(r"No. (\d+)", log)
+		# print logno
 
-# find all dates on which the complaint was filed
-for log in allcontent: 
-	datefiled = re.findall(r"\d+\sOn\s([A-z]+\s\d+,\s\d+)", log)
-	# print datefiled
+	# find all dates on which the complaint was filed
+	for log in allcontent: 
+		datefiled = re.findall(r"\d+\sOn\s([A-z]+\s\d+,\s\d+)", log)
+		# print datefiled
 
-# find the district in which the incident occurred
-district = []
-for log in allcontent:
-	if re.match(r"(\d+)\D+ District", log) == False:
-		district = "none"
-	else:
+	# find the district in which the incident occurred
+	district = []
+	alldistrict = []
+	for log in allcontent:
 		district.append(re.findall(r"(\d+)\D+ District", log))
-print district
 
-# find reference names of officers involved
-officers = []
-for log in allcontent:
-	if "involving" in log:
-		if "Officers" in log:
-			officers.append(re.findall(r"for\s(Officer\s[A-Z])", log))
-		else: 
-			officers.append(re.findall(r"(?:\(([A-Z][a-z]+\s[A-Z]))\)", log))
-	else:
-		officers.append(re.findall(r"CPD\)\s(\w+)", log))
-# print officers  
+	# district = list(itertools.chain.from_iterable(district))
+	print district
+	# print Counter(alldistrict)
 
-# split allcontent into sentences to allow iterating by sentences
-bysentence = []
-
-for log in allcontent:
-	bysentence.append(re.split("[.!?][\s]{1,2}(?=[A-Z])", log))
-	# print bysentence
-
-for sentence in bysentence:
-	# print sentence
-	recs = []
-	for thing in sentence:
-		if "IPRA recommended" in thing:
-			recs.append(thing)
-	# print recs
