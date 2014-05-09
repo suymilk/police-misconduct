@@ -34,10 +34,6 @@ allcontent = [log.replace("\n", " ") for log in content]
 # all files start with unncessary title that gets grouped into own element; delete element
 del allcontent[0]
 
-# what's this thing look like?
-# o = open("out.txt", "w")
-# print >>o, allcontent
-
 # find all Log/C.R. numbers, store to logno
 for log in allcontent:
 	logno = re.findall(r"No. (\d+)", log)
@@ -50,10 +46,9 @@ for log in allcontent:
 
 # find the district in which the incident occurred
 district = []
-alldistrict = []
 for log in allcontent:
 	district.append(re.findall(r"(\d+)\D+ District", log))
 
-# district = list(itertools.chain.from_iterable(district))
+district = list(itertools.chain.from_iterable(district))
 print district
-# print Counter(alldistrict)
+print Counter(district)
